@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
-import { AnimatePresence, m, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { siteConfig } from "../data/config";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import type { GalleryPhoto } from "../data/config";
 import { Lightbox } from "./Lightbox";
 import { PhotoArt } from "./doodles";
@@ -60,7 +61,7 @@ function PhotoCard({
           )}
 
           {showPlaceholder ? (
-            <span className="absolute bottom-2 right-2 rounded-sm border border-ink/25 bg-cream/90 px-1.5 py-0.5 text-[9px] font-medium leading-none text-ink-soft">
+            <span className="absolute bottom-2 right-2 rounded-sm border border-ink/25 bg-cream/90 px-1.5 py-0.5 text-[10px] font-medium leading-none text-ink-soft">
               {siteConfig.gallery.placeholderTag} {slotNumber}
             </span>
           ) : null}
@@ -75,7 +76,7 @@ function PhotoCard({
 }
 
 export function Gallery() {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = usePrefersReducedMotion();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const photos = siteConfig.gallery.photos;
   const total = photos.length;
@@ -111,20 +112,26 @@ export function Gallery() {
           </p>
         ) : null}
 
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 md:gap-7 lg:mt-12">
-          {photos.map((photo, index) => (
-            <m.div
-              key={`${photo.id}-${photo.src ?? "placeholder"}`}
-              initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: Math.min(index * 0.045, 0.22), ease: EASE }}
-              className={index % 3 === 1 ? "md:mt-8" : ""}
-            >
-              <PhotoCard photo={photo} index={index} onOpen={() => setActiveIndex(index)} />
-            </m.div>
-          ))}
-        </div>
+        {photos.length === 0 ? (
+          <p className="mt-10 max-w-xl rounded-xl border-2 border-dashed border-sky bg-paper px-5 py-6 text-sm leading-6 text-ink-soft">
+            {siteConfig.gallery.empty}
+          </p>
+        ) : (
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 md:gap-7 lg:mt-12">
+            {photos.map((photo, index) => (
+              <m.div
+                key={`${photo.id}-${photo.src ?? "placeholder"}`}
+                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, delay: Math.min(index * 0.045, 0.22), ease: EASE }}
+                className={index % 3 === 1 ? "md:mt-8" : ""}
+              >
+                <PhotoCard photo={photo} index={index} onOpen={() => setActiveIndex(index)} />
+              </m.div>
+            ))}
+          </div>
+        )}
       </div>
 
       <AnimatePresence>

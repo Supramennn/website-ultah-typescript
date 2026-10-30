@@ -1,12 +1,13 @@
-import { m, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
 import { siteConfig } from "../data/config";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { SectionHeading } from "./SectionHeading";
 import { HeartDoodle } from "./doodles";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 export function Timeline() {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = usePrefersReducedMotion();
 
   return (
     <section

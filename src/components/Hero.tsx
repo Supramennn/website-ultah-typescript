@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import type { CSSProperties } from "react";
-import { m, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
 import { siteConfig } from "../data/config";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { ArrowDownDoodle, BirdPair, FlowerDoodle, HeartDoodle, Squiggle, StarDoodle } from "./doodles";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -64,7 +65,7 @@ function FloatingParticles() {
 }
 
 export function Hero() {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = usePrefersReducedMotion();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {
@@ -102,7 +103,7 @@ export function Hero() {
             initial={reduceMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.06, ease: EASE }}
-            className="mt-4 font-display text-[clamp(2.7rem,7.5vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.025em] text-ink"
+            className="mt-4 font-display text-[clamp(2.7rem,7.5vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.025em] text-ink focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-8"
           >
             {siteConfig.hero.titleBefore}
             <br />

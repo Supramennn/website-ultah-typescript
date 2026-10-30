@@ -32,8 +32,6 @@
 
   body {
     @apply bg-paper font-sans text-ink antialiased;
-    background-image: radial-gradient(circle at 15% 0%, #f4faff 0, transparent 45%);
-    background-repeat: no-repeat;
     overflow-x: hidden;
   }
 
@@ -85,27 +83,14 @@
 
   .letter-paper {
     background-color: var(--color-cream);
-    background-image:
-      linear-gradient(
-        to right,
-        transparent 0,
-        transparent 2.1rem,
-        rgb(243 166 160 / 0.45) 2.1rem,
-        rgb(243 166 160 / 0.45) calc(2.1rem + 1px),
-        transparent calc(2.1rem + 1px)
-      ),
-      repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent calc(2rem - 1px),
-        rgb(140 203 244 / 0.42) calc(2rem - 1px),
-        rgb(140 203 244 / 0.42) 2rem
-      );
-    background-position: 0 0, 0 1.2rem;
-  }
-
-  .dot-grid-none {
-    background-image: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(2rem - 1px),
+      rgb(140 203 244 / 0.42) calc(2rem - 1px),
+      rgb(140 203 244 / 0.42) 2rem
+    );
+    background-position: 0 1.2rem;
   }
 }
 
@@ -173,6 +158,8 @@
 }
 
 .cake-glow {
+  mix-blend-mode: screen;
+  filter: blur(18px);
   transition: opacity 0.4s ease;
 }
 

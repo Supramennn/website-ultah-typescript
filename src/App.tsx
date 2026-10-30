@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { LazyMotion, MotionConfig, domAnimation } from "framer-motion";
+import { LazyMotion, domAnimation } from "framer-motion";
 import { CakeFinale } from "./components/CakeFinale";
 import { Footer } from "./components/Footer";
 import { Gallery } from "./components/Gallery";
@@ -8,6 +8,7 @@ import { Letter } from "./components/Letter";
 import { MusicToggle } from "./components/MusicToggle";
 import { Opening } from "./components/Opening";
 import { Timeline } from "./components/Timeline";
+import { siteConfig } from "./data/config";
 import { useConfetti } from "./hooks/useConfetti";
 import { useScrollLock } from "./hooks/useScrollLock";
 
@@ -24,16 +25,16 @@ export default function App() {
   }, [fire]);
 
   return (
-    <MotionConfig reducedMotion="user">
-      <LazyMotion features={domAnimation}>
-        {opened ? (
+    <LazyMotion features={domAnimation}>
+      {opened ? (
+        <>
+          <a
+            href="#konten"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[90] focus:inline-flex focus:min-h-11 focus:items-center focus:rounded-sticker focus:border-2 focus:border-ink focus:bg-cream focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-ink"
+          >
+            {siteConfig.ui.skipToContent}
+          </a>
           <main id="konten" tabIndex={-1}>
-            <a
-              href="#konten"
-              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[90] focus:inline-flex focus:min-h-11 focus:items-center focus:rounded-sticker focus:border-2 focus:border-ink focus:bg-cream focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-ink"
-            >
-              Lewati ke isi
-            </a>
             <Hero />
             <Timeline />
             <Gallery />
@@ -42,16 +43,16 @@ export default function App() {
             <Footer />
             <MusicToggle />
           </main>
-        ) : null}
+        </>
+      ) : null}
 
-        <Opening visible={!opened} onOpen={handleOpen} />
+      <Opening visible={!opened} onOpen={handleOpen} />
 
-        <canvas
-          ref={canvasRef}
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-0 z-[70] h-full w-full"
-        />
-      </LazyMotion>
-    </MotionConfig>
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-[70] h-full w-full"
+      />
+    </LazyMotion>
   );
 }

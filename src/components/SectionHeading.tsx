@@ -32,7 +32,7 @@ export function SectionHeading({
           isDark ? "text-sky" : "text-ink-soft",
         ].join(" ")}
       >
-        <StarDoodle className={`h-4 w-4 shrink-0 ${isDark ? "text-butter" : "text-butter"}`} />
+        <StarDoodle className="h-4 w-4 shrink-0 text-butter" />
         {kicker}
       </p>
       <h2

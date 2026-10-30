@@ -21,10 +21,21 @@ export type SiteConfig = {
     age: number;
     birthdayLabel: string;
     birthdayISO: string;
+    birthdayTimeZone: string;
   };
   sender: {
     name: string;
     nickname: string;
+  };
+  ui: {
+    skipToContent: string;
+    countdownUnits: {
+      days: string;
+      hours: string;
+      minutes: string;
+      seconds: string;
+    };
+    countdownSrTemplate: string;
   };
   music: {
     /** Path lagu di folder public/audio, atau null kalau tanpa lagu. */
@@ -74,6 +85,7 @@ export type SiteConfig = {
     handNote: string;
     placeholderNotice: string;
     placeholderTag: string;
+    empty: string;
     openLabel: string;
     photos: GalleryPhoto[];
     lightbox: {
@@ -129,10 +141,21 @@ export const siteConfig: SiteConfig = {
     age: 24,
     birthdayLabel: "13 Maret 2027",
     birthdayISO: "2027-03-13T00:00:00+07:00",
+    birthdayTimeZone: "Asia/Jakarta",
   },
   sender: {
     name: "Noval",
     nickname: "amas",
+  },
+  ui: {
+    skipToContent: "Lewati ke isi",
+    countdownUnits: {
+      days: "hari",
+      hours: "jam",
+      minutes: "menit",
+      seconds: "detik",
+    },
+    countdownSrTemplate: "Hitung mundur ke {date}: {days} hari lagi.",
   },
   music: {
     src: null,
@@ -169,6 +192,7 @@ export const siteConfig: SiteConfig = {
     scrollCue: "gulir pelan-pelan",
     floatingNote: "peluuuuk adee",
   },
+  /** DRAFT: ganti momen dan tanggalnya dengan cerita yang sebenarnya. */
   timeline: {
     kicker: "Cerita kita",
     title: "Versi singkatnya",
@@ -204,6 +228,7 @@ export const siteConfig: SiteConfig = {
     placeholderNotice:
       "Slot foto masih kosong. Taruh foto kalian di public/photos, lalu isi src di src/data/config.ts.",
     placeholderTag: "slot foto",
+    empty: "Kotak kenangan masih kosong. Nanti diisi ya, pelan-pelan.",
     openLabel: "buka foto",
     photos: [
       {
@@ -250,6 +275,7 @@ export const siteConfig: SiteConfig = {
       counterSeparator: "dari",
     },
   },
+  /** DRAFT: silakan tulis ulang dengan gaya amas sendiri. */
   letter: {
     kicker: "Surat",
     title: "Buat ade, dari amas",

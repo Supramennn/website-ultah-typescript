@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { m, useReducedMotion } from "framer-motion";
+import { m } from "framer-motion";
 import { siteConfig } from "../data/config";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import type { GalleryPhoto } from "../data/config";
 import { useScrollLock } from "../hooks/useScrollLock";
 import { PhotoArt } from "./doodles";
@@ -39,11 +40,11 @@ export function Lightbox({
   onPrevious,
   onNext,
 }: LightboxProps) {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = usePrefersReducedMotion();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
-  const [failed, setFailed] = useState(false);
-  const showPlaceholder = !photo.src || failed;
+  const [failedId, setFailedId] = useState<string | null>(null);
+  const showPlaceholder = !photo.src || failedId === photo.id;
 
   useScrollLock(true);
 
@@ -121,7 +122,7 @@ export function Lightbox({
   return (
     <m.div
       className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-night/95 p-3 sm:p-6"
-      initial={{ opacity: 0 }}
+      initial={reduceMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: reduceMotion ? 0 : 0.2 } }}
       onClick={handleBackdropClick}
@@ -169,7 +170,7 @@ export function Lightbox({
               key={photo.id}
               src={photo.src}
               alt={photo.alt}
-              onError={() => setFailed(true)}
+              onError={() => setFailedId(photo.id)}
               className="max-h-[58dvh] w-auto max-w-full object-contain"
               decoding="async"
             />

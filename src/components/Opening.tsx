@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, m, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { siteConfig } from "../data/config";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { useCountdown } from "../hooks/useCountdown";
 import { FlowerDoodle, HeartDoodle, StarDoodle } from "./doodles";
 
@@ -12,7 +13,10 @@ type OpeningProps = {
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 function CountdownPanel() {
-  const countdown = useCountdown(siteConfig.recipient.birthdayISO);
+  const countdown = useCountdown(
+    siteConfig.recipient.birthdayISO,
+    siteConfig.recipient.birthdayTimeZone,
+  );
   const pad = (value: number) => String(value).padStart(2, "0");
 
   if (countdown.phase !== "before") {
@@ -28,10 +32,10 @@ function CountdownPanel() {
   }
 
   const items = [
-    { label: "hari", value: countdown.days },
-    { label: "jam", value: countdown.hours },
-    { label: "menit", value: countdown.minutes },
-    { label: "detik", value: countdown.seconds },
+    { label: siteConfig.ui.countdownUnits.days, value: countdown.days },
+    { label: siteConfig.ui.countdownUnits.hours, value: countdown.hours },
+    { label: siteConfig.ui.countdownUnits.minutes, value: countdown.minutes },
+    { label: siteConfig.ui.countdownUnits.seconds, value: countdown.seconds },
   ];
 
   return (
@@ -54,7 +58,9 @@ function CountdownPanel() {
         {siteConfig.opening.countdownNote}
       </p>
       <p className="sr-only">
-        Hitung mundur ke {siteConfig.recipient.birthdayLabel}: {countdown.days} hari lagi.
+        {siteConfig.ui.countdownSrTemplate
+          .replace("{date}", siteConfig.recipient.birthdayLabel)
+          .replace("{days}", String(countdown.days))}
       </p>
     </div>
   );
@@ -132,7 +138,7 @@ function Envelope({ opening, reduceMotion }: { opening: boolean; reduceMotion: b
 }
 
 export function Opening({ visible, onOpen }: OpeningProps) {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = usePrefersReducedMotion();
   const [opening, setOpening] = useState(false);
   const timeoutRef = useRef<number | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -170,8 +176,8 @@ export function Opening({ visible, onOpen }: OpeningProps) {
     <AnimatePresence>
       {visible ? (
         <m.div
-          className="fixed inset-0 z-50 flex min-h-dvh items-center justify-center overflow-y-auto bg-paper px-4 py-8 sm:px-6"
-          initial={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex min-h-dvh items-start justify-center overflow-y-auto bg-paper px-4 py-8 sm:items-center sm:px-6"
+          initial={reduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: reduceMotion ? 0 : 0.45, ease: EASE } }}
           role="dialog"

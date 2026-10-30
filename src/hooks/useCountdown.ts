@@ -8,25 +8,36 @@ type Countdown = {
   phase: "before" | "today" | "after";
 };
 
-function isSameLocalDay(a: Date, b: Date): boolean {
-  return (
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-  );
+const dayFormatters = new Map<string, Intl.DateTimeFormat>();
+
+function getDayKey(date: Date, timeZone: string): string {
+  let formatter = dayFormatters.get(timeZone);
+
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    dayFormatters.set(timeZone, formatter);
+  }
+
+  return formatter.format(date);
 }
 
-function readCountdown(targetISO: string): Countdown {
+function readCountdown(targetISO: string, timeZone: string): Countdown {
   const target = new Date(targetISO);
   const now = new Date();
   const diff = Math.max(0, target.getTime() - now.getTime());
   const totalSeconds = Math.floor(diff / 1000);
 
-  const phase = isSameLocalDay(now, target)
-    ? "today"
-    : now.getTime() < target.getTime()
-      ? "before"
-      : "after";
+  const phase =
+    getDayKey(now, timeZone) === getDayKey(target, timeZone)
+      ? "today"
+      : now.getTime() < target.getTime()
+        ? "before"
+        : "after";
 
   return {
     days: Math.floor(totalSeconds / 86_400),
@@ -37,16 +48,16 @@ function readCountdown(targetISO: string): Countdown {
   };
 }
 
-export function useCountdown(targetISO: string): Countdown {
-  const [countdown, setCountdown] = useState<Countdown>(() => readCountdown(targetISO));
+export function useCountdown(targetISO: string, timeZone: string): Countdown {
+  const [countdown, setCountdown] = useState<Countdown>(() => readCountdown(targetISO, timeZone));
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setCountdown(readCountdown(targetISO));
-    }, 1000);
+    const update = () => setCountdown(readCountdown(targetISO, timeZone));
+    update();
+    const timer = window.setInterval(update, 1000);
 
     return () => window.clearInterval(timer);
-  }, [targetISO]);
+  }, [targetISO, timeZone]);
 
   return countdown;
 }

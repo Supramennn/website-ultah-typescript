@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import { m, useInView, useReducedMotion } from "framer-motion";
+import { m, useInView } from "framer-motion";
 import { siteConfig } from "../data/config";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { useTypewriter } from "../hooks/useTypewriter";
 import { SectionHeading } from "./SectionHeading";
 import { FlowerDoodle, HeartDoodle } from "./doodles";
@@ -17,7 +18,7 @@ function Cursor() {
 }
 
 export function Letter() {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = usePrefersReducedMotion();
   const cardRef = useRef<HTMLDivElement | null>(null);
   const inView = useInView(cardRef, { once: true, amount: 0.25 });
   const content = siteConfig.letter.paragraphs.join("\n\n");

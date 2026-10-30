@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { AnimatePresence, m, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { siteConfig } from "../data/config";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { CakeIllustration } from "./CakeIllustration";
 import { SectionHeading } from "./SectionHeading";
 import { HeartDoodle, StarDoodle } from "./doodles";
@@ -30,7 +31,7 @@ function FlameIcon() {
 }
 
 export function CakeFinale({ onCelebrate }: CakeFinaleProps) {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = usePrefersReducedMotion();
   const [lit, setLit] = useState(true);
   const [hasBlown, setHasBlown] = useState(false);
   const cakeRef = useRef<HTMLDivElement | null>(null);
@@ -83,6 +84,7 @@ export function CakeFinale({ onCelebrate }: CakeFinaleProps) {
             <CakeIllustration
               lit={lit}
               label={lit ? siteConfig.finale.cakeLitLabel : siteConfig.finale.cakeOutLabel}
+              age={siteConfig.finale.cakeLabel}
             />
             {hasBlown ? (
               <m.p

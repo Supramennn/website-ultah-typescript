@@ -6,7 +6,15 @@ const BLUSH = "#f3a6a0";
 
 const CANDLES = [122, 151, 180, 209, 238];
 
-export function CakeIllustration({ lit, label }: { lit: boolean; label: string }) {
+export function CakeIllustration({
+  lit,
+  label,
+  age,
+}: {
+  lit: boolean;
+  label: string;
+  age: string;
+}) {
   return (
     <svg
       viewBox="0 0 360 380"
@@ -141,7 +149,7 @@ export function CakeIllustration({ lit, label }: { lit: boolean; label: string }
         fontSize="38"
         fontWeight="600"
       >
-        {label}
+        {age}
       </text>
       <path
         d="M153 322c8-4 18-4 26 0m12 0c8-4 18-4 26 0"
